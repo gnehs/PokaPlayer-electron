@@ -41,7 +41,7 @@ app.on('ready', () => {
                 label: '關於 PokaPlayer',
                 selector: 'orderFrontStandardAboutPanel:'
             }, {
-                label: '開啟開發人員工具',
+                label: '開發人員工具',
                 click() {
                     const firstWindow = BrowserWindow.getAllWindows()[0]
                     if (!firstWindow) return
