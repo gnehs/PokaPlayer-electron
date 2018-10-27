@@ -1,5 +1,5 @@
 {
-    "name": "PokaPlayer-electron",
+    "name": "PokaPlayerElectron",
     "version": "1.0.0",
     "description": "A minimal Electron application",
     "main": "main.js",
@@ -12,5 +12,8 @@
     "license": "MIT",
     "devDependencies": {
         "electron": "^3.0.4"
+    },
+    "dependencies": {
+        "axios": "^0.18.0"
     }
 }

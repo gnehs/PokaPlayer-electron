@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 const remote = require('electron').remote;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -7,11 +7,15 @@ let mainWindow
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 800, height: 600 })
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        icon: __dirname + '/icon.png'
+    })
 
     // and load the index.html of the app.
-    //mainWindow.loadFile('index.html')
-    mainWindow.loadURL('https://as.gnehs.net/');
+    mainWindow.loadFile('index.html')
+
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
 
@@ -27,7 +31,42 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+    if (process.platform === 'darwin') {
+        template = [{
+            label: 'PokaPlayer',
+            submenu: [{
+                label: 'About PokaPlayer',
+                selector: 'orderFrontStandardAboutPanel:'
+            }, {
+                type: 'separator'
+            }, {
+                label: 'Quit',
+                accelerator: 'Command+Q',
+                click() {
+                    app.quit();
+                }
+            }]
+        }];
+
+        menu = Menu.buildFromTemplate(template);
+        Menu.setApplicationMenu(menu);
+    } else {
+        template = [{
+            label: '&File',
+            submenu: [{
+                label: '&Exit',
+                accelerator: 'Alt+f4',
+                click() {
+                    app.quit();
+                }
+            }]
+        }];
+        menu = Menu.buildFromTemplate(template);
+        mainWindow.setMenu(menu);
+    }
+    createWindow()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
