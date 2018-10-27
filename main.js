@@ -64,6 +64,17 @@ app.on('ready', () => {
                     app.quit();
                 }
             }]
+        }, {
+            label: "編輯",
+            submenu: [
+                { label: "還原", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+                { label: "重做", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+                { type: "separator" },
+                { label: "剪下", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+                { label: "複製", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+                { label: "貼上", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+                { label: "選取全部", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+            ]
         }];
 
         menu = Menu.buildFromTemplate(template);

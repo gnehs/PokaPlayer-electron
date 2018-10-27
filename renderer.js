@@ -19,10 +19,10 @@ window.onload = function() {
             webview.addEventListener("dom-ready", function() {
                 //webview.openDevTools();
                 console.log(webview.getTitle());
+                webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
             });
         }
         let ping;
-        let pass = $("#userPASS").val()
         let server = $("#server").val()
         try {
             ping = await pingServer(server)
@@ -64,14 +64,16 @@ window.onload = function() {
 
             function hotKeyControl(key) {
                 switch (key) {
-                    case 'playPause':
-                        document.getElementById("poka").executeJavaScript("ap.toggle()")
-                        break
                     case 'last':
                         document.getElementById("poka").executeJavaScript("ap.skipBack()")
+                        setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
                         break
                     case 'next':
                         document.getElementById("poka").executeJavaScript("ap.skipForward()")
+                        setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
+                        break
+                    case 'playPause':
+                        document.getElementById("poka").executeJavaScript("ap.toggle()")
                         break
                 }
             }
