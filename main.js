@@ -36,12 +36,27 @@ app.on('ready', () => {
         template = [{
             label: 'PokaPlayer',
             submenu: [{
-                label: 'About PokaPlayer',
+                label: '關於 PokaPlayer',
                 selector: 'orderFrontStandardAboutPanel:'
+            }, {
+                label: '開啟開發人員工具',
+                click() {
+                    const firstWindow = BrowserWindow.getAllWindows()[0]
+                    if (!firstWindow) return
+                    const isDevToolsOpened = firstWindow.isDevToolsOpened()
+                    const isDevToolsFocused = firstWindow.isDevToolsFocused()
+                    if (isDevToolsOpened && isDevToolsFocused) {
+                        firstWindow.closeDevTools()
+                    } else if (isDevToolsOpened && !isDevToolsFocused) {
+                        firstWindow.devToolsWebContents.focus()
+                    } else {
+                        firstWindow.openDevTools()
+                    }
+                }
             }, {
                 type: 'separator'
             }, {
-                label: 'Quit',
+                label: '離開',
                 accelerator: 'Command+Q',
                 click() {
                     app.quit();
