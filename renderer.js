@@ -50,37 +50,39 @@ window.onload = function() {
 }
 
 /* Tray */
-let tray = null
-tray = new Tray(__dirname + '/tray.png')
-const contextMenu = Menu.buildFromTemplate([{
-        label: '播放/暫停',
-        click() {
-            hotKeyControl('playPause')
-        }
-    },
-    {
-        label: '上一首',
-        click() {
-            hotKeyControl('last')
-        }
-    },
-    {
-        label: '下一首',
-        click() {
-            hotKeyControl('next')
-        }
-    },
-])
-tray.setContextMenu(contextMenu)
-tray.setToolTip('PokaPlayer')
-tray.setTitle('PokaPlayer')
-setInterval(() => {
-    document.getElementById("poka").executeJavaScript(
-        "lrc.getLyrics()[lrc.select(ap.audio.currentTime)].text",
-        false,
-        result => tray.setTitle(!result.match(/歌詞讀取中/) ? result : 'PokaPlayer')
-    )
-}, 500);
+if (process.platform === 'darwin') {
+    let tray = null
+    tray = new Tray(__dirname + '/tray.png')
+    const contextMenu = Menu.buildFromTemplate([{
+            label: '播放/暫停',
+            click() {
+                hotKeyControl('playPause')
+            }
+        },
+        {
+            label: '上一首',
+            click() {
+                hotKeyControl('last')
+            }
+        },
+        {
+            label: '下一首',
+            click() {
+                hotKeyControl('next')
+            }
+        },
+    ])
+    tray.setContextMenu(contextMenu)
+    tray.setToolTip('PokaPlayer')
+    tray.setTitle('PokaPlayer')
+    setInterval(() => {
+        document.getElementById("poka").executeJavaScript(
+            "lrc.getLyrics()[lrc.select(ap.audio.currentTime)].text",
+            false,
+            result => tray.setTitle(!result.match(/歌詞讀取中/) ? result : 'PokaPlayer')
+        )
+    }, 500);
+}
 /* 綁定媒體鍵 */
 const systemGlobalShortcut = [{
         name: '播放暂停',
