@@ -10,9 +10,9 @@ PokaPlayer 的桌面版，支援媒體鍵控制等功能
 
 \*macOS 請下載 `Darwin` 版
 
-## To Use
+## 使用
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+要下載並使用 [PokaPlayer-electron](https://github.com/gnehs/PokaPlayer-electron)，你需要安裝 [Git](https://git-scm.com) 和 [Node.js](https://nodejs.org/en/download/) (包含 [npm](http://npmjs.com))，並執行以下指令:
 
 ```bash
 # Clone this repository
