@@ -71,7 +71,7 @@ setInterval(() => {
     document.getElementById("poka").executeJavaScript(
         "lrc.getLyrics()[lrc.select(ap.audio.currentTime)].text",
         false,
-        result => tray.setTitle(result)
+        result => tray.setTitle(!result.match(/歌詞讀取中/) ? result : 'PokaPlayer')
     )
 }, 500);
 /* 綁定媒體鍵 */
