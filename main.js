@@ -1,6 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Menu } = require('electron')
-const remote = require('electron').remote;
+const { app, BrowserWindow, Menu, shell } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -36,46 +35,108 @@ app.on('ready', () => {
 
     if (process.platform === 'darwin') {
         template = [{
-            label: 'PokaPlayer',
-            submenu: [{
-                label: '關於 PokaPlayer',
-                selector: 'orderFrontStandardAboutPanel:'
-            }, {
-                label: '開發人員工具',
-                click() {
-                    const firstWindow = BrowserWindow.getAllWindows()[0]
-                    if (!firstWindow) return
-                    const isDevToolsOpened = firstWindow.isDevToolsOpened()
-                    const isDevToolsFocused = firstWindow.isDevToolsFocused()
-                    if (isDevToolsOpened && isDevToolsFocused) {
-                        firstWindow.closeDevTools()
-                    } else if (isDevToolsOpened && !isDevToolsFocused) {
-                        firstWindow.devToolsWebContents.focus()
-                    } else {
-                        firstWindow.openDevTools()
+                label: 'PokaPlayer',
+                submenu: [{
+                    label: '關於 PokaPlayer',
+                    selector: 'orderFrontStandardAboutPanel:'
+                }, {
+                    type: 'separator'
+                }, {
+                    label: '離開',
+                    accelerator: 'Command+Q',
+                    click() {
+                        app.quit();
                     }
-                }
+                }]
             }, {
-                type: 'separator'
-            }, {
-                label: '離開',
-                accelerator: 'Command+Q',
-                click() {
-                    app.quit();
-                }
-            }]
-        }, {
-            label: "編輯",
-            submenu: [
-                { label: "還原", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-                { label: "重做", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-                { type: "separator" },
-                { label: "剪下", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-                { label: "複製", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-                { label: "貼上", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-                { label: "選取全部", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-            ]
-        }];
+                label: "編輯",
+                submenu: [
+                    { label: "還原", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+                    { label: "重做", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+                    { type: "separator" },
+                    { label: "剪下", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+                    { label: "複製", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+                    { label: "貼上", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+                    { label: "選取全部", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+                ]
+            },
+            {
+                label: '檢視',
+                submenu: [{
+                        label: '重新整裡',
+                        accelerator: 'CmdOrCtrl+R',
+                        click: function(item, focusedWindow) {
+                            if (focusedWindow)
+                                focusedWindow.reload();
+                        }
+                    },
+                    {
+                        label: '全螢幕',
+                        accelerator: (function() {
+                            if (process.platform == 'darwin')
+                                return 'Ctrl+Command+F';
+                            else
+                                return 'F11';
+                        })(),
+                        click: function(item, focusedWindow) {
+                            if (focusedWindow)
+                                focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+                        }
+                    },
+                    {
+                        label: '開發人員工具',
+                        accelerator: (function() {
+                            if (process.platform == 'darwin')
+                                return 'Alt+Command+I';
+                            else
+                                return 'Ctrl+Shift+I';
+                        })(),
+                        click: function(item, focusedWindow) {
+                            if (focusedWindow)
+                                focusedWindow.toggleDevTools();
+                        }
+                    },
+                ]
+            },
+            {
+                label: '視窗',
+                role: 'window',
+                submenu: [{
+                        label: '最小化',
+                        accelerator: 'CmdOrCtrl+M',
+                        role: 'minimize'
+                    },
+                    {
+                        label: '關閉',
+                        accelerator: 'CmdOrCtrl+W',
+                        role: 'close'
+                    },
+                ]
+            },
+            {
+                label: '說明',
+                role: 'help',
+                submenu: [{
+                        label: '查看 GitHub',
+                        click: () => {
+                            shell.openExternal('https://github.com/gnehs/PokaPlayer/')
+                        }
+                    }, {
+                        label: '查看 Wiki',
+                        click: () => {
+                            shell.openExternal('https://github.com/gnehs/PokaPlayer/wiki')
+                        }
+                    },
+                    { type: "separator" },
+                    {
+                        label: '回報問題',
+                        click: () => {
+                            shell.openExternal('https://github.com/gnehs/PokaPlayer/issues/new/choose')
+                        }
+                    }
+                ]
+            },
+        ];
 
         menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);

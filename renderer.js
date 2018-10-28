@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
-const { dialog, globalShortcut } = require('electron').remote
+const { dialog, globalShortcut, Tray, Menu } = require('electron').remote
 window.onload = function() {
     if (window.localStorage["server"])
         $("#server").val(window.localStorage["server"])
@@ -34,51 +34,86 @@ window.onload = function() {
         } else {
             window.localStorage["server"] = server
             loadWebview()
-                /* 綁定媒體鍵 */
-            const systemGlobalShortcut = [{
-                    name: '播放暂停',
-                    value: 'playPause',
-                    global: `MediaPlayPause`,
-                },
-                {
-                    name: '上一首',
-                    value: 'last',
-                    global: `MediaPreviousTrack`,
-                },
-                {
-                    name: '下一首',
-                    value: 'next',
-                    global: `MediaNextTrack`,
-                },
-            ]
-            systemGlobalShortcut.forEach(single => {
-                const res = globalShortcut.register(single.global, () => {
-                    hotKeyControl(single.value)
-                })
-                if (res) {
-                    console.log(`${single.global}注册成功`)
-                } else {
-                    console.log(`${single.global}注册失败`)
-                }
-            })
 
-            function hotKeyControl(key) {
-                switch (key) {
-                    case 'last':
-                        document.getElementById("poka").executeJavaScript("ap.skipBack()")
-                        setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
-                        break
-                    case 'next':
-                        document.getElementById("poka").executeJavaScript("ap.skipForward()")
-                        setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
-                        break
-                    case 'playPause':
-                        document.getElementById("poka").executeJavaScript("ap.toggle()")
-                        break
-                }
-            }
+
         }
 
     });
 
+}
+
+/* Tray */
+let tray = null
+tray = new Tray(__dirname + '/tray.png')
+const contextMenu = Menu.buildFromTemplate([{
+        label: '播放/暫停',
+        click() {
+            hotKeyControl('playPause')
+        }
+    },
+    {
+        label: '上一首',
+        click() {
+            hotKeyControl('last')
+        }
+    },
+    {
+        label: '下一首',
+        click() {
+            hotKeyControl('next')
+        }
+    },
+])
+tray.setContextMenu(contextMenu)
+tray.setToolTip('PokaPlayer')
+tray.setTitle('PokaPlayer')
+setInterval(() => {
+    document.getElementById("poka").executeJavaScript(
+        "lrc.getLyrics()[lrc.select(ap.audio.currentTime)].text",
+        false,
+        result => tray.setTitle(result)
+    )
+}, 500);
+/* 綁定媒體鍵 */
+const systemGlobalShortcut = [{
+        name: '播放暂停',
+        value: 'playPause',
+        global: `MediaPlayPause`,
+    },
+    {
+        name: '上一首',
+        value: 'last',
+        global: `MediaPreviousTrack`,
+    },
+    {
+        name: '下一首',
+        value: 'next',
+        global: `MediaNextTrack`,
+    },
+]
+systemGlobalShortcut.forEach(single => {
+    const res = globalShortcut.register(single.global, () => {
+        hotKeyControl(single.value)
+    })
+    if (res) {
+        console.log(`${single.global} 註冊成功`)
+    } else {
+        console.log(`${single.global} 註冊失敗`)
+    }
+})
+
+function hotKeyControl(key) {
+    switch (key) {
+        case 'last':
+            document.getElementById("poka").executeJavaScript("ap.skipBack()")
+            setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
+            break
+        case 'next':
+            document.getElementById("poka").executeJavaScript("ap.skipForward()")
+            setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
+            break
+        case 'playPause':
+            document.getElementById("poka").executeJavaScript("ap.toggle()")
+            break
+    }
 }
