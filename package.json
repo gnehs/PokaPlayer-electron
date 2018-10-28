@@ -1,11 +1,11 @@
 {
     "name": "PokaPlayerElectron",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A minimal Electron application",
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "build": "electron-packager . PokaPlayer --icon=./icon.png --out=./build/"
+        "build": "electron-packager . PokaPlayer --icon=./icon.png --platform=all --out=./build/ --asar"
     },
     "repository": "https://github.com/gnehs/PokaPlayer-electron",
     "keywords": [],

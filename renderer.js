@@ -49,6 +49,49 @@ window.onload = function() {
 
 }
 
+/* 綁定媒體鍵 */
+const systemGlobalShortcut = [{
+        name: '播放暂停',
+        value: 'playPause',
+        global: `MediaPlayPause`,
+    },
+    {
+        name: '上一首',
+        value: 'last',
+        global: `MediaPreviousTrack`,
+    },
+    {
+        name: '下一首',
+        value: 'next',
+        global: `MediaNextTrack`,
+    },
+]
+systemGlobalShortcut.forEach(single => {
+    const res = globalShortcut.register(single.global, () => {
+        hotKeyControl(single.value)
+    })
+    if (res) {
+        console.log(`${single.global} 註冊成功`)
+    } else {
+        console.log(`${single.global} 註冊失敗`)
+    }
+})
+
+function hotKeyControl(key) {
+    switch (key) {
+        case 'last':
+            document.getElementById("poka").executeJavaScript("ap.skipBack()")
+            setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
+            break
+        case 'next':
+            document.getElementById("poka").executeJavaScript("ap.skipForward()")
+            setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
+            break
+        case 'playPause':
+            document.getElementById("poka").executeJavaScript("ap.toggle()")
+            break
+    }
+}
 /* Tray */
 let tray = null
 if (process.platform === 'darwin') {
@@ -93,48 +136,5 @@ if (process.platform === 'darwin') {
     window.onbeforeunload = (e) => {
         tray.destroy()
         return
-    }
-}
-/* 綁定媒體鍵 */
-const systemGlobalShortcut = [{
-        name: '播放暂停',
-        value: 'playPause',
-        global: `MediaPlayPause`,
-    },
-    {
-        name: '上一首',
-        value: 'last',
-        global: `MediaPreviousTrack`,
-    },
-    {
-        name: '下一首',
-        value: 'next',
-        global: `MediaNextTrack`,
-    },
-]
-systemGlobalShortcut.forEach(single => {
-    const res = globalShortcut.register(single.global, () => {
-        hotKeyControl(single.value)
-    })
-    if (res) {
-        console.log(`${single.global} 註冊成功`)
-    } else {
-        console.log(`${single.global} 註冊失敗`)
-    }
-})
-
-function hotKeyControl(key) {
-    switch (key) {
-        case 'last':
-            document.getElementById("poka").executeJavaScript("ap.skipBack()")
-            setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
-            break
-        case 'next':
-            document.getElementById("poka").executeJavaScript("ap.skipForward()")
-            setTimeout(() => document.getElementById("poka").executeJavaScript("ap.play()"), 200)
-            break
-        case 'playPause':
-            document.getElementById("poka").executeJavaScript("ap.toggle()")
-            break
     }
 }
