@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
-const { dialog, globalShortcut, Tray, Menu } = require('electron').remote
+const { dialog, globalShortcut, Tray, Menu, app } = require('electron').remote
 
 
 window.onload = function() {
@@ -50,8 +50,8 @@ window.onload = function() {
 }
 
 /* Tray */
+let tray = null
 if (process.platform === 'darwin') {
-    let tray = null
     tray = new Tray(__dirname + '/tray.png')
     const contextMenu = Menu.buildFromTemplate([{
             label: '播放/暫停',
@@ -71,6 +71,13 @@ if (process.platform === 'darwin') {
                 hotKeyControl('next')
             }
         },
+        { type: "separator" }, {
+            label: '離開 PokaPlayer',
+            accelerator: 'Command+Q',
+            click() {
+                app.quit();
+            }
+        }
     ])
     tray.setContextMenu(contextMenu)
     tray.setToolTip('PokaPlayer')
@@ -82,6 +89,11 @@ if (process.platform === 'darwin') {
             result => tray.setTitle(!result.match(/歌詞讀取中/) ? result : 'PokaPlayer')
         )
     }, 500);
+    // 關閉或重新整理前把 tray 幹掉
+    window.onbeforeunload = (e) => {
+        tray.destroy()
+        return
+    }
 }
 /* 綁定媒體鍵 */
 const systemGlobalShortcut = [{

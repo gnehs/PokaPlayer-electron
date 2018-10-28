@@ -34,7 +34,6 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-
     if (process.platform === 'darwin') {
         template = [{
                 label: 'PokaPlayer',
@@ -44,7 +43,7 @@ app.on('ready', () => {
                 }, {
                     type: 'separator'
                 }, {
-                    label: '離開',
+                    label: '離開 PokaPlayer',
                     accelerator: 'Command+Q',
                     click() {
                         app.quit();
@@ -142,19 +141,6 @@ app.on('ready', () => {
 
         menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
-    } else {
-        /* template = [{
-             label: '&File',
-             submenu: [{
-                 label: '&Exit',
-                 accelerator: 'Alt+f4',
-                 click() {
-                     app.quit();
-                 }
-             }]
-         }];
-         menu = Menu.buildFromTemplate(template);
-         mainWindow.setMenu(menu);*/
     }
     createWindow()
 })
