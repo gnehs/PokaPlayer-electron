@@ -3,6 +3,8 @@
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
 const { dialog, globalShortcut, Tray, Menu } = require('electron').remote
+
+
 window.onload = function() {
     if (window.localStorage["server"])
         $("#server").val(window.localStorage["server"])
@@ -14,8 +16,13 @@ window.onload = function() {
         }
 
         function loadWebview() {
-            $('#app').html(`<webview id="poka" src="${window.localStorage["server"]}"></webview>`)
+            $('#app').html(`<webview id="poka" src="${window.localStorage["server"]}" allowpopups></webview>`)
             const webview = document.getElementById("poka");
+            webview.addEventListener("did-stop-loading", function() {
+                //webview.openDevTools();
+                console.log(webview.getTitle());
+                webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
+            });
             webview.addEventListener("dom-ready", function() {
                 //webview.openDevTools();
                 console.log(webview.getTitle());

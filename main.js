@@ -8,8 +8,10 @@ let mainWindow
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1024,
+        height: 768,
+        minHeight: 620,
+        minWidth: 324,
         icon: __dirname + '/icon.png'
     })
 
@@ -141,18 +143,18 @@ app.on('ready', () => {
         menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
     } else {
-        template = [{
-            label: '&File',
-            submenu: [{
-                label: '&Exit',
-                accelerator: 'Alt+f4',
-                click() {
-                    app.quit();
-                }
-            }]
-        }];
-        menu = Menu.buildFromTemplate(template);
-        mainWindow.setMenu(menu);
+        /* template = [{
+             label: '&File',
+             submenu: [{
+                 label: '&Exit',
+                 accelerator: 'Alt+f4',
+                 click() {
+                     app.quit();
+                 }
+             }]
+         }];
+         menu = Menu.buildFromTemplate(template);
+         mainWindow.setMenu(menu);*/
     }
     createWindow()
 })
