@@ -8,41 +8,43 @@ const { dialog, globalShortcut, Tray, Menu, app } = require('electron').remote
 window.onload = function() {
     if (window.localStorage["server"])
         $("#server").val(window.localStorage["server"])
-    if (window.localStorage["userPASS"])
-        $("#userPASS").val(window.localStorage["userPASS"])
+    $('#server').keypress(function(e) {
+        if (e.which == 13) {
+            $('#login').click();
+        }
+    });
     $('#login').click(async function() {
         async function pingServer(url) {
-            return (await axios.get(`${url}/ping`)).data == "PONG"
+            return (await axios.get(`${url}`)).status == 200
         }
 
         function loadWebview() {
-            $('#app').html(`<webview id="poka" src="${window.localStorage["server"]}" allowpopups></webview>`)
+            $('#app>#poka').attr(`src`, window.localStorage["server"])
             const webview = document.getElementById("poka");
-            webview.addEventListener("did-stop-loading", function() {
-                //webview.openDevTools();
-                console.log(webview.getTitle());
-                webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
-            });
             webview.addEventListener("dom-ready", function() {
                 //webview.openDevTools();
-                console.log(webview.getTitle());
+                $(webview).removeAttr('style')
+                $(webview).addClass('animated fadeIn')
+                $('#app>*:not(#poka)').remove()
                 webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
             });
         }
+        $(this).text('連接中...')
         let ping;
         let server = $("#server").val()
         try {
             ping = await pingServer(server)
         } catch (e) {
+            $(this).text('連接至伺服器')
             return dialog.showMessageBox({ message: '無法連接伺服器' })
         }
         if (!ping) {
             dialog.showMessageBox({ message: '無法連接伺服器' })
+            $(this).text('連接至伺服器')
         } else {
             window.localStorage["server"] = server
+            $(this).text('載入中...')
             loadWebview()
-
-
         }
 
     });
@@ -66,6 +68,7 @@ const systemGlobalShortcut = [{
         global: `MediaNextTrack`,
     },
 ]
+globalShortcut.unregisterAll()
 systemGlobalShortcut.forEach(single => {
     const res = globalShortcut.register(single.global, () => {
         hotKeyControl(single.value)
@@ -133,7 +136,7 @@ if (process.platform === 'darwin') {
         )
     }, 500);
     // 關閉或重新整理前把 tray 幹掉
-    window.onbeforeunload = (e) => {
+    window.onbeforeunload = e => {
         tray.destroy()
         return
     }
