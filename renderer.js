@@ -132,9 +132,9 @@ if (process.platform === 'darwin') {
         document.getElementById("poka").executeJavaScript(
             "lrc.getLyrics()[lrc.select(ap.audio.currentTime)].text",
             false,
-            result => tray.setTitle(!result.match(/歌詞讀取中/) ? result : 'PokaPlayer')
+            result => tray.setTitle(result)
         )
-    }, 500);
+    }, 200);
     // 關閉或重新整理前把 tray 幹掉
     window.onbeforeunload = e => {
         tray.destroy()
