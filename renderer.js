@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
-const { dialog, globalShortcut, Tray, Menu, app } = require('electron').remote
+const { dialog, globalShortcut, Tray, Menu, app, systemPreferences } = require('electron').remote
 
 
 window.onload = function() {
@@ -98,7 +98,7 @@ function hotKeyControl(key) {
 /* Tray */
 let tray = null
 if (process.platform === 'darwin') {
-    tray = new Tray(__dirname + '/tray.png')
+    tray = new Tray(systemPreferences.isDarkMode() ? './assets/imgs/darktray.png' : './assets/imgs/tray.png')
     const contextMenu = Menu.buildFromTemplate([{
             label: '播放/暫停',
             click() {

@@ -12,7 +12,7 @@ function createWindow() {
         height: 768,
         minHeight: 620,
         minWidth: 324,
-        icon: __dirname + '/icon.png'
+        icon: __dirname + '/icon/icon.png'
     })
 
     // and load the index.html of the app.
@@ -118,24 +118,30 @@ app.on('ready', () => {
                 label: '說明',
                 role: 'help',
                 submenu: [{
-                        label: '查看 GitHub',
-                        click: () => {
-                            shell.openExternal('https://github.com/gnehs/PokaPlayer/')
-                        }
-                    }, {
-                        label: '查看 Wiki',
-                        click: () => {
-                            shell.openExternal('https://github.com/gnehs/PokaPlayer/wiki')
-                        }
-                    },
-                    { type: "separator" },
-                    {
-                        label: '回報問題',
-                        click: () => {
-                            shell.openExternal('https://github.com/gnehs/PokaPlayer/issues/new/choose')
-                        }
+                    label: '查看 PokaPlayer-electron GitHub',
+                    click: () => {
+                        shell.openExternal('https://github.com/gnehs/PokaPlayer-electron')
                     }
-                ]
+                }, {
+                    type: "separator"
+                }, {
+                    label: '查看 PokaPlayer GitHub',
+                    click: () => {
+                        shell.openExternal('https://github.com/gnehs/PokaPlayer/')
+                    }
+                }, {
+                    label: '查看 PokaPlayer Wiki',
+                    click: () => {
+                        shell.openExternal('https://github.com/gnehs/PokaPlayer/wiki')
+                    }
+                }, {
+                    type: "separator"
+                }, {
+                    label: '回報問題',
+                    click: () => {
+                        shell.openExternal('https://github.com/gnehs/PokaPlayer/issues/new/choose')
+                    }
+                }]
             },
         ];
 
