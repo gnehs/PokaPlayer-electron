@@ -68,9 +68,9 @@ const systemGlobalShortcut = [{
         global: `MediaNextTrack`,
     },
 ]
-globalShortcut.unregisterAll()
 systemGlobalShortcut.forEach(single => {
-    const res = globalShortcut.register(single.global, () => {
+    if (globalShortcut.isRegistered(single.global)) globalShortcut.unregister(single.global)
+    let res = globalShortcut.register(single.global, () => {
         hotKeyControl(single.value)
     })
     if (res) {
