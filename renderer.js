@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
-const { dialog, globalShortcut, Tray, Menu, app, systemPreferences } = require('electron').remote
+const { dialog, globalShortcut, Tray, Menu, app, systemPreferences, shell } = require('electron').remote
 
 
 window.onload = function() {
@@ -27,7 +27,15 @@ window.onload = function() {
                 $(webview).addClass('animated fadeIn')
                 $('#app>*:not(#poka)').remove()
                 webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
+                webview.executeJavaScript("window.electron=true")
             });
+            webview.addEventListener('new-window', (e) => {
+                e.preventDefault();
+                const protocol = require('url').parse(e.url).protocol
+                if (protocol === 'http:' || protocol === 'https:') {
+                    shell.openExternal(e.url)
+                }
+            })
         }
         $(this).text('連接中...')
         let ping;
