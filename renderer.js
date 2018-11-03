@@ -27,7 +27,7 @@ window.onload = function() {
                 $(webview).addClass('animated fadeIn')
                 $('#app>*:not(#poka)').remove()
                 webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
-                webview.executeJavaScript("window.electron=true")
+                webview.executeJavaScript("window.electron = true")
             });
             webview.addEventListener('new-window', (e) => {
                 e.preventDefault();
