@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
-const { dialog, globalShortcut, Tray, Menu, app, systemPreferences, shell } = require('electron').remote
+const { dialog, globalShortcut, Tray, Menu, app, systemPreferences, shell, process } = require('electron').remote
 
 
 window.onload = function() {
@@ -28,6 +28,9 @@ window.onload = function() {
                 $('#app>*:not(#poka)').remove()
                 webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
                 webview.executeJavaScript("window.electron = true")
+                webview.executeJavaScript(`window.electronAppVersion = '${app.getVersion()}'`)
+                webview.executeJavaScript(`window.electronChromeVersion = '${process.versions.chrome}'`)
+                webview.executeJavaScript(`window.electronVersion = '${process.versions.electron}'`)
             });
             webview.addEventListener('new-window', (e) => {
                 e.preventDefault();
@@ -140,7 +143,7 @@ if (process.platform === 'darwin') {
         document.getElementById("poka").executeJavaScript(
             "lrc.getLyrics()[lrc.select(ap.audio.currentTime)].text",
             false,
-            result => tray.setTitle(result)
+            result => tray.setTitle(result == "歌詞讀取中" ? `PokaPlayer` : result)
         )
     }, 200);
     // 關閉或重新整理前把 tray 幹掉
