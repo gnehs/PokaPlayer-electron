@@ -109,7 +109,7 @@ function hotKeyControl(key) {
 /* Tray */
 let tray = null
 if (process.platform === 'darwin') {
-    tray = new Tray(systemPreferences.isDarkMode() ? './assets/imgs/darktray.png' : './assets/imgs/tray.png')
+    tray = new Tray(systemPreferences.isDarkMode() ? __dirname + '/assets/imgs/darktray.png' : __dirname + '/assets/imgs/tray.png')
     const contextMenu = Menu.buildFromTemplate([{
             label: '播放/暫停',
             click() {
