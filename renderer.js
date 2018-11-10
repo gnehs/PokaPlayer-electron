@@ -2,18 +2,27 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const axios = require('axios');
-const { dialog, globalShortcut, Tray, Menu, app, systemPreferences, shell, process } = require('electron').remote
+const {
+    dialog,
+    globalShortcut,
+    Tray,
+    Menu,
+    app,
+    systemPreferences,
+    shell,
+    process
+} = require('electron').remote
 
 
-window.onload = function() {
+window.onload = function () {
     if (window.localStorage["server"])
         $("#server").val(window.localStorage["server"])
-    $('#server').keypress(function(e) {
+    $('#server').keypress(function (e) {
         if (e.which == 13) {
             $('#login').click();
         }
     });
-    $('#login').click(async function() {
+    $('#login').click(async function () {
         async function pingServer(url) {
             return (await axios.get(`${url}`)).status == 200
         }
@@ -21,12 +30,11 @@ window.onload = function() {
         function loadWebview() {
             $('#app>#poka').attr(`src`, window.localStorage["server"])
             const webview = document.getElementById("poka");
-            webview.addEventListener("dom-ready", function() {
+            webview.addEventListener("dom-ready", function () {
                 //webview.openDevTools();
                 $(webview).removeAttr('style')
                 $(webview).addClass('animated fadeIn')
                 $('#app>*:not(#poka)').remove()
-                webview.insertCSS(`body::-webkit-scrollbar{width:0px !important;}`)
                 webview.executeJavaScript("window.electron = true")
                 webview.executeJavaScript(`window.electronAppVersion = '${app.getVersion()}'`)
                 webview.executeJavaScript(`window.electronChromeVersion = '${process.versions.chrome}'`)
@@ -47,10 +55,14 @@ window.onload = function() {
             ping = await pingServer(server)
         } catch (e) {
             $(this).text('連接至伺服器')
-            return dialog.showMessageBox({ message: '無法連接伺服器' })
+            return dialog.showMessageBox({
+                message: '無法連接伺服器'
+            })
         }
         if (!ping) {
-            dialog.showMessageBox({ message: '無法連接伺服器' })
+            dialog.showMessageBox({
+                message: '無法連接伺服器'
+            })
             $(this).text('連接至伺服器')
         } else {
             window.localStorage["server"] = server
@@ -128,7 +140,9 @@ if (process.platform === 'darwin') {
                 hotKeyControl('next')
             }
         },
-        { type: "separator" }, {
+        {
+            type: "separator"
+        }, {
             label: '離開 PokaPlayer',
             accelerator: 'Command+Q',
             click() {
