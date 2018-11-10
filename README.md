@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/16719720/48268897-42536880-e471-11e8-80c7-0220dffc41c1.png)
+
 # PokaPlayer-electron
 
 PokaPlayer 的桌面版，支援媒體鍵控制等功能
