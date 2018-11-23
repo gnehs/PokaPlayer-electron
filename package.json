@@ -5,7 +5,7 @@
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "build": "electron-packager . PokaPlayer --icon=./assets/icon/icon.png --platform=all --out=./build/"
+        "build": "electron-packager . PokaPlayer --icon=./assets/icon/icon.png --platform=all --out=build --overwrite --version-string.ProductName=PokaPlayerElectron --version-string.CompanyName=gnehs"
     },
     "repository": "https://github.com/gnehs/PokaPlayer-electron",
     "keywords": [],
