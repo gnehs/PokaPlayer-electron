@@ -1,5 +1,10 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Menu, shell } = require('electron')
+const {
+    app,
+    BrowserWindow,
+    Menu,
+    shell
+} = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -22,7 +27,7 @@ function createWindow() {
     // mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
-    mainWindow.on('closed', function() {
+    mainWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
@@ -51,14 +56,39 @@ app.on('ready', () => {
                 }]
             }, {
                 label: "編輯",
-                submenu: [
-                    { label: "還原", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-                    { label: "重做", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-                    { type: "separator" },
-                    { label: "剪下", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-                    { label: "複製", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-                    { label: "貼上", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-                    { label: "選取全部", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+                submenu: [{
+                        label: "還原",
+                        accelerator: "CmdOrCtrl+Z",
+                        selector: "undo:"
+                    },
+                    {
+                        label: "重做",
+                        accelerator: "Shift+CmdOrCtrl+Z",
+                        selector: "redo:"
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        label: "剪下",
+                        accelerator: "CmdOrCtrl+X",
+                        selector: "cut:"
+                    },
+                    {
+                        label: "複製",
+                        accelerator: "CmdOrCtrl+C",
+                        selector: "copy:"
+                    },
+                    {
+                        label: "貼上",
+                        accelerator: "CmdOrCtrl+V",
+                        selector: "paste:"
+                    },
+                    {
+                        label: "選取全部",
+                        accelerator: "CmdOrCtrl+A",
+                        selector: "selectAll:"
+                    }
                 ]
             },
             {
@@ -66,33 +96,33 @@ app.on('ready', () => {
                 submenu: [{
                         label: '重新整裡',
                         accelerator: 'CmdOrCtrl+R',
-                        click: function(item, focusedWindow) {
+                        click: function (item, focusedWindow) {
                             if (focusedWindow)
                                 focusedWindow.reload();
                         }
                     },
                     {
                         label: '全螢幕',
-                        accelerator: (function() {
+                        accelerator: (function () {
                             if (process.platform == 'darwin')
                                 return 'Ctrl+Command+F';
                             else
                                 return 'F11';
                         })(),
-                        click: function(item, focusedWindow) {
+                        click: function (item, focusedWindow) {
                             if (focusedWindow)
                                 focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
                         }
                     },
                     {
                         label: '開發人員工具',
-                        accelerator: (function() {
+                        accelerator: (function () {
                             if (process.platform == 'darwin')
                                 return 'Alt+Command+I';
                             else
                                 return 'Ctrl+Shift+I';
                         })(),
-                        click: function(item, focusedWindow) {
+                        click: function (item, focusedWindow) {
                             if (focusedWindow)
                                 focusedWindow.toggleDevTools();
                         }
@@ -152,7 +182,7 @@ app.on('ready', () => {
 })
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
@@ -160,7 +190,7 @@ app.on('window-all-closed', function() {
     }
 })
 
-app.on('activate', function() {
+app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {

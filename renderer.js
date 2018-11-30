@@ -39,6 +39,12 @@ window.onload = function () {
                 webview.executeJavaScript(`window.electronAppVersion = '${app.getVersion()}'`)
                 webview.executeJavaScript(`window.electronChromeVersion = '${process.versions.chrome}'`)
                 webview.executeJavaScript(`window.electronVersion = '${process.versions.electron}'`)
+                //新的格式
+                webview.executeJavaScript(`window.electronData = {
+                    appVersion:'${app.getVersion()}',
+                    chromeVersion:'${process.versions.chrome}',
+                    electronVersion:'${process.versions.electron}'
+                }`)
             });
             webview.addEventListener('new-window', (e) => {
                 e.preventDefault();
@@ -49,8 +55,16 @@ window.onload = function () {
             })
         }
         $(this).text('連接中...')
-        let ping;
+        // 伺服器位置
         let server = $("#server").val()
+        if (!server) {
+            dialog.showMessageBox({
+                message: '未填入伺服器'
+            })
+            return $(this).text('連接至伺服器')
+        }
+        // 嘗試連接
+        let ping;
         try {
             ping = await pingServer(server)
         } catch (e) {
@@ -60,18 +74,16 @@ window.onload = function () {
             })
         }
         if (!ping) {
+            $(this).text('連接至伺服器')
             dialog.showMessageBox({
                 message: '無法連接伺服器'
             })
-            $(this).text('連接至伺服器')
         } else {
             window.localStorage["server"] = server
             $(this).text('載入中...')
             loadWebview()
         }
-
     });
-
 }
 
 /* 綁定媒體鍵 */
