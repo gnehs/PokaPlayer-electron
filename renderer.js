@@ -144,7 +144,7 @@ if (process.platform === 'darwin') {
     const contextMenu = Menu.buildFromTemplate([{
         label: '顯示/隱藏',
         click() {
-            currentWindow.isVisible() ? currentWindow.hide() : currentWindow.show()
+            currentWindow.isVisible() ? currentWindow.minimize() : currentWindow.show()
         }
     }, {
         type: "separator"
