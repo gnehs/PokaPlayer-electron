@@ -12,7 +12,7 @@ const {
     shell,
     process
 } = require('electron').remote
-
+const currentWindow = require('electron').remote.getCurrentWindow()
 
 window.onload = function () {
     if (window.localStorage["server"])
@@ -30,7 +30,10 @@ window.onload = function () {
         function loadWebview() {
             $('#app>#poka').attr(`src`, window.localStorage["server"])
             const webview = document.getElementById("poka");
+            console.time('伺服器讀取');
             webview.addEventListener("dom-ready", function () {
+                console.timeEnd('伺服器讀取');
+                bindSystemGlobalShortcut() // 綁定媒體鍵
                 //webview.openDevTools();
                 $(webview).removeAttr('style')
                 $(webview).addClass('animated fadeIn')
@@ -50,7 +53,7 @@ window.onload = function () {
                 e.preventDefault();
                 const protocol = require('url').parse(e.url).protocol
                 if (protocol === 'http:' || protocol === 'https:') {
-                    shell.openExternal(e.url)
+                    shell.openExternal(e.url) // 開系統瀏覽器
                 }
             })
         }
@@ -86,34 +89,38 @@ window.onload = function () {
     });
 }
 
-/* 綁定媒體鍵 */
-const systemGlobalShortcut = [{
-        name: '播放暂停',
-        value: 'playPause',
-        global: `MediaPlayPause`,
-    },
-    {
-        name: '上一首',
-        value: 'last',
-        global: `MediaPreviousTrack`,
-    },
-    {
-        name: '下一首',
-        value: 'next',
-        global: `MediaNextTrack`,
-    },
-]
-systemGlobalShortcut.forEach(single => {
-    if (globalShortcut.isRegistered(single.global)) globalShortcut.unregister(single.global)
-    let res = globalShortcut.register(single.global, () => {
-        hotKeyControl(single.value)
+function bindSystemGlobalShortcut() {
+    /* 綁定媒體鍵 */
+    const systemGlobalShortcut = [{
+            name: '播放暂停',
+            value: 'playPause',
+            global: `MediaPlayPause`,
+        },
+        {
+            name: '上一首',
+            value: 'last',
+            global: `MediaPreviousTrack`,
+        },
+        {
+            name: '下一首',
+            value: 'next',
+            global: `MediaNextTrack`,
+        },
+    ]
+    console.groupCollapsed("媒體鍵註冊");
+    systemGlobalShortcut.forEach(single => {
+        if (globalShortcut.isRegistered(single.global)) globalShortcut.unregister(single.global)
+        let res = globalShortcut.register(single.global, () => {
+            hotKeyControl(single.value)
+        })
+        if (res) {
+            console.log(`媒體鍵：${single.global} 註冊成功`)
+        } else {
+            console.warn(`${single.global} 註冊失敗`)
+        }
     })
-    if (res) {
-        console.log(`${single.global} 註冊成功`)
-    } else {
-        console.log(`${single.global} 註冊失敗`)
-    }
-})
+    console.groupEnd();
+}
 
 function hotKeyControl(key) {
     switch (key) {
@@ -135,33 +142,36 @@ let tray = null
 if (process.platform === 'darwin') {
     tray = new Tray(systemPreferences.isDarkMode() ? __dirname + '/assets/imgs/darktray.png' : __dirname + '/assets/imgs/tray.png')
     const contextMenu = Menu.buildFromTemplate([{
-            label: '播放/暫停',
-            click() {
-                hotKeyControl('playPause')
-            }
-        },
-        {
-            label: '上一首',
-            click() {
-                hotKeyControl('last')
-            }
-        },
-        {
-            label: '下一首',
-            click() {
-                hotKeyControl('next')
-            }
-        },
-        {
-            type: "separator"
-        }, {
-            label: '離開 PokaPlayer',
-            accelerator: 'Command+Q',
-            click() {
-                app.quit();
-            }
+        label: '顯示/隱藏',
+        click() {
+            currentWindow.isVisible() ? currentWindow.hide() : currentWindow.show()
         }
-    ])
+    }, {
+        type: "separator"
+    }, {
+        label: '播放/暫停',
+        click() {
+            hotKeyControl('playPause')
+        }
+    }, {
+        label: '上一首',
+        click() {
+            hotKeyControl('last')
+        }
+    }, {
+        label: '下一首',
+        click() {
+            hotKeyControl('next')
+        }
+    }, {
+        type: "separator"
+    }, {
+        label: '離開 PokaPlayer',
+        accelerator: 'Command+Q',
+        click() {
+            app.quit();
+        }
+    }])
     tray.setContextMenu(contextMenu)
     tray.setToolTip('PokaPlayer')
     tray.setTitle('PokaPlayer')
