@@ -48,6 +48,8 @@ window.onload = function () {
                     chromeVersion:'${process.versions.chrome}',
                     electronVersion:'${process.versions.electron}'
                 }`)
+                // 戳檢查 poka ele 的更新
+                webview.executeJavaScript(`checkPokaEleUpdate("${app.getVersion()}")`)
             });
             webview.addEventListener('new-window', (e) => {
                 e.preventDefault();
