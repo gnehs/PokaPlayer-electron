@@ -5,12 +5,19 @@ const {
     Menu,
     shell
 } = require('electron')
+const setupPug = require('electron-pug')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow() {
+async function createWindow() {
+    try {
+        let pug = await setupPug()
+        pug.on('error', err => console.error('electron-pug error', err))
+    } catch (err) {
+        // Could not initiate 'electron-pug'
+    }
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 1200,
@@ -21,7 +28,7 @@ function createWindow() {
     })
 
     // and load the index.html of the app.
-    mainWindow.loadFile('index.html')
+    mainWindow.loadFile('index.pug')
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
