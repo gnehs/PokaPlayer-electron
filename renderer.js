@@ -15,6 +15,8 @@ const {
 const currentWindow = require('electron').remote.getCurrentWindow()
 
 window.onload = function () {
+    $('#app>.mdui-valign>.mdui-center.mdui-color-white').attr('style', 'width: 300px;box-shadow: 0 6px 20px #0000001f;overflow: hidden;border-radius: 8px;')
+    $('#app>*:not(#poka)').animateCss('zoomIn')
     if (window.localStorage["server"])
         $("#server").val(window.localStorage["server"])
     $('#server').keypress(function (e) {
@@ -34,10 +36,6 @@ window.onload = function () {
             webview.addEventListener("dom-ready", function () {
                 console.timeEnd('伺服器讀取');
                 bindSystemGlobalShortcut() // 綁定媒體鍵
-                //webview.openDevTools();
-                $(webview).removeAttr('style')
-                $(webview).addClass('animated fadeIn')
-                $('#app>*:not(#poka)').remove()
                 webview.executeJavaScript("window.electron = true")
                 webview.executeJavaScript(`window.electronAppVersion = '${app.getVersion()}'`)
                 webview.executeJavaScript(`window.electronChromeVersion = '${process.versions.chrome}'`)
@@ -50,6 +48,12 @@ window.onload = function () {
                 }`)
                 // 戳檢查 poka ele 的更新
                 webview.executeJavaScript(`checkPokaEleUpdate("${app.getVersion()}")`)
+                //
+                $('#app>*:not(#poka)').animateCss('zoomOut', function () {
+                    $('#app>*:not(#poka)').remove()
+                    $(webview).removeAttr('style')
+                    $(webview).animateCss('fadeIn')
+                });
             });
             webview.addEventListener('new-window', (e) => {
                 e.preventDefault();
@@ -190,3 +194,29 @@ if (process.platform === 'darwin') {
         return
     }
 }
+$.fn.extend({
+    animateCss: function (animationName, callback) {
+        var animationEnd = (function (el) {
+            var animations = {
+                animation: 'animationend',
+                OAnimation: 'oAnimationEnd',
+                MozAnimation: 'mozAnimationEnd',
+                WebkitAnimation: 'webkitAnimationEnd',
+            };
+
+            for (var t in animations) {
+                if (el.style[t] !== undefined) {
+                    return animations[t];
+                }
+            }
+        })(document.createElement('div'));
+
+        this.addClass('animated ' + animationName).one(animationEnd, function () {
+            $(this).removeClass('animated ' + animationName);
+
+            if (typeof callback === 'function') callback();
+        });
+
+        return this;
+    },
+});
