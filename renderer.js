@@ -36,10 +36,6 @@ window.onload = function () {
             webview.addEventListener("dom-ready", function () {
                 console.timeEnd('伺服器讀取');
                 bindSystemGlobalShortcut() // 綁定媒體鍵
-                webview.executeJavaScript("window.electron = true")
-                webview.executeJavaScript(`window.electronAppVersion = '${app.getVersion()}'`)
-                webview.executeJavaScript(`window.electronChromeVersion = '${process.versions.chrome}'`)
-                webview.executeJavaScript(`window.electronVersion = '${process.versions.electron}'`)
                 //新的格式
                 webview.executeJavaScript(`window.electronData = {
                     appVersion:'${app.getVersion()}',
