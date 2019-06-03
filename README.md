@@ -1,3 +1,8 @@
+# 本儲存庫已停止維護
+
+由於 Chrome 已推出桌面版 PWA 應用程式，同時也能夠使用媒體鍵來控制音樂播放，已滿足 PokaPlayer-electron 當初開發的初衷，因此停止維護，並建議使用 Chrome PWA。
+
+---
 ![image](https://user-images.githubusercontent.com/16719720/48268897-42536880-e471-11e8-80c7-0220dffc41c1.png)
 
 # PokaPlayer-electron
